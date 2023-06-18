@@ -26,6 +26,8 @@ int main(int argc, char** argv) {
     printf("Please type a message.\n");
     bool sending = true;
     while (sending) {
+        printf("MESSAGE: ");
+        fflush(stdout);
         char raw_text_buf[128];
         fgets(raw_text_buf, sizeof(raw_text_buf), stdin);
         char text_buf[128];
@@ -33,7 +35,7 @@ int main(int argc, char** argv) {
         for (int i = 1; text_buf[i - 1] != '\0'; i++) {
             text_buf[i] = raw_text_buf[i - 1];
         }
-        printf("Writing...");
+        printf("Writing...\n");
         fflush(stdout);
         uint64_t start = (((millis() / INTERVAL) + 2) * INTERVAL);
         while (millis() < start) {}
@@ -44,14 +46,13 @@ int main(int argc, char** argv) {
         start += INTERVAL / 2;
         for (int n = 0; text_buf[n / 8] != '\n'; n++) {
             bool bit = nth_bit(text_buf, n);
-            printf("%d", bit);
-            //printf("\r%d @ %d          ", bit, n);
-            //fflush(stdout);
+            printf("\r%d @ %d          ", bit, n);
+            fflush(stdout);
             while (millis() < (start + (INTERVAL * n))) {
                 if (bit) spam_rdrand();
             }
         }
-        printf("\nDone.           \n");
+        printf("\rDone.              \n");
     }
     return 0;
 }
