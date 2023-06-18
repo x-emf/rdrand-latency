@@ -6,7 +6,7 @@
 
 void spam_rdrand() {
     asm volatile(
-        "mov $0x100, %%r9\n\t"
+        "mov $0x800, %%r9\n\t"
         "loop:\n\t"
         "rdrand %%r8\n\t"
         "dec %%r9\n\t"
@@ -26,8 +26,13 @@ int main(int argc, char** argv) {
     printf("Please type a message.\n");
     bool sending = true;
     while (sending) {
+        char raw_text_buf[128];
+        fgets(raw_text_buf, sizeof(raw_text_buf), stdin);
         char text_buf[128];
-        fgets(text_buf, sizeof(text_buf), stdin);
+        text_buf[0] = 'X';
+        for (int i = 1; text_buf[i - 1] != '\0'; i++) {
+            text_buf[i] = raw_text_buf[i - 1];
+        }
         printf("Writing...");
         fflush(stdout);
         uint64_t start = (((millis() / INTERVAL) + 2) * INTERVAL);

@@ -5,14 +5,16 @@
 #include "interval.h"
 #include "../measure.h"
 
-#define LATENCY_SAMPLES 10
+#define LATENCY_SAMPLES 4
 
 int main(int argc, char** argv) {
     struct timespec delay;
     delay.tv_sec = 0;
-    delay.tv_nsec = 5 * 1000 * 1000;
+    delay.tv_nsec = 50 * 1000;
     int poll = ((millis() / INTERVAL) + 2) * INTERVAL;
     bool reading = false;
+    int read_index = 0;
+    char read_buf[128] = {'\0'};
     while (1) {
         while (millis() < poll) {}
         poll += INTERVAL;
@@ -26,7 +28,18 @@ int main(int argc, char** argv) {
         //printf("%d/%d high -> Measured bit: %d        \r", num_high, LATENCY_SAMPLES, bit);
         //fflush(stdout);
         if (reading) {
-            printf("Read bit: %d\n", bit);
+            printf("(read %d)\n", bit);
+            if (bit) read_buf[read_index / 8] |= (1 << (7 - (read_index % 8)));
+            if ((read_index > 7) && (read_buf[(read_index / 8) - 1] == '\0')) {
+                reading = false;
+                read_index = 0;
+                printf("Got: %s\n", read_buf + 1);
+                for (int i = 0; i < sizeof(read_buf)/sizeof(char); i++) {
+                    read_buf[i] = '\0';
+                }
+            } else {
+                read_index++;
+            }
         } else {
             if (bit) {
                 printf("Read pre bit. \n");
