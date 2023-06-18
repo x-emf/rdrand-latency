@@ -3,6 +3,7 @@
 #include "measure.h"
 
 int main(int argc, char** argv) {
-    printf("Hello, world!\n");
+    uint64_t latency = measure_rdrand_latency();
+    printf("Latency in cycles: %ld\n", latency);
     return 0;
 }
