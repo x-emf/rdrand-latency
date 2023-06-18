@@ -33,16 +33,20 @@ int main(int argc, char** argv) {
         uint64_t start = (((millis() / INTERVAL) + 2) * INTERVAL);
         while (millis() < start) {}
         start += INTERVAL;
-        while (millis() < start) spam_rdrand();
+        while (millis() < start) {
+            spam_rdrand();
+        }
+        start += INTERVAL / 2;
         for (int n = 0; text_buf[n / 8] != '\n'; n++) {
             bool bit = nth_bit(text_buf, n);
-            printf("\r%d @ %d          ", bit, n);
-            fflush(stdout);
+            printf("%d", bit);
+            //printf("\r%d @ %d          ", bit, n);
+            //fflush(stdout);
             while (millis() < (start + (INTERVAL * n))) {
                 if (bit) spam_rdrand();
             }
         }
-        printf("\rDone.           \n");
+        printf("\nDone.           \n");
     }
     return 0;
 }
