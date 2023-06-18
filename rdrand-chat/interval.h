@@ -1,1 +1,1 @@
-#define INTERVAL 40
+#define INTERVAL 20

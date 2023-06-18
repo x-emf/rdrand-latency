@@ -10,7 +10,7 @@
 int main(int argc, char** argv) {
     struct timespec delay;
     delay.tv_sec = 0;
-    delay.tv_nsec = 50 * 1000;
+    delay.tv_nsec = 5 * 1000;
     int poll = ((millis() / INTERVAL) + 2) * INTERVAL;
     bool reading = false;
     int read_index = 0;
