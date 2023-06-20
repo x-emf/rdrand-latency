@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
     bool reading = false;
     int read_index = 0;
     char read_buf[128] = {'\0'};
+    char partial_buf[128] = {'\0'};
     while (1) {
         while (millis() < poll) {}
         poll += INTERVAL;
@@ -30,16 +31,19 @@ int main(int argc, char** argv) {
             if (bit) {
                 read_buf[read_index / 8] |= (1 << (7 - (read_index % 8)));
             }
-            if ((read_index % 8) == 0) {
-                printf("\rPARTIAL: %s\r", read_buf + 1);
-                fflush(stdout);
+            if (read_index > 0 && ((read_index % 8) == 0)) {
+                int partial_update_index = (read_index - 1) / 8;
+                partial_buf[partial_update_index] = read_buf[partial_update_index];
             }
+            printf("\r%d/%d -> 1'b%d: %s\r", num_high, LATENCY_SAMPLES, bit, partial_buf + 1);
+            fflush(stdout);
             if ((read_index > 7) && (read_buf[(read_index / 8) - 1] == '\0')) {
                 reading = false;
                 read_index = 0;
-                printf("\rMESSAGE: %s                                           \n", read_buf + 1);
+                printf("\rGOT MESSAGE: %s                                           \n", read_buf + 1);
                 for (int i = 0; i < sizeof(read_buf)/sizeof(char); i++) {
                     read_buf[i] = '\0';
+                    partial_buf[i] = '\0';
                 }
             } else {
                 read_index++;
