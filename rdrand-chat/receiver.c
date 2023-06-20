@@ -26,10 +26,14 @@ int main(int argc, char** argv) {
             num_high += latency < 2900;
         }
         bool bit = num_high > (LATENCY_SAMPLES / 2);
-        printf("Latency: %ld | %d/%d high -> Measured bit: %d        \r", latency, num_high, LATENCY_SAMPLES, bit);
-        fflush(stdout);
         if (reading) {
-            if (bit) read_buf[read_index / 8] |= (1 << (7 - (read_index % 8)));
+            if (bit) {
+                read_buf[read_index / 8] |= (1 << (7 - (read_index % 8)));
+            }
+            if ((read_index % 8) == 0) {
+                printf("\rPARTIAL: %s\r", read_buf + 1);
+                fflush(stdout);
+            }
             if ((read_index > 7) && (read_buf[(read_index / 8) - 1] == '\0')) {
                 reading = false;
                 read_index = 0;
@@ -41,8 +45,12 @@ int main(int argc, char** argv) {
                 read_index++;
             }
         } else {
+            printf("Latency: %ld | %d/%d high -> Measured bit: %d        \r", latency, num_high, LATENCY_SAMPLES, bit);
+        fflush(stdout);
             if (bit) {
                 printf("\rRead pre bit.                                         \n");
+                printf("                                                     \r");
+                fflush(stdout);
                 reading = true;
             }
         }
