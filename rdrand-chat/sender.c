@@ -6,7 +6,7 @@
 
 void spam_rdrand() {
     asm volatile(
-        "mov $0x800, %%r9\n\t"
+        "mov $0x80, %%r9\n\t"
         "loop:\n\t"
         "rdrand %%r8\n\t"
         "dec %%r9\n\t"
