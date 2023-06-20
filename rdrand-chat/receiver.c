@@ -5,7 +5,7 @@
 #include "interval.h"
 #include "../measure.h"
 
-#define LATENCY_SAMPLES 4
+#define LATENCY_SAMPLES 8
 
 int main(int argc, char** argv) {
     struct timespec delay;
