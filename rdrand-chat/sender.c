@@ -37,10 +37,10 @@ int main(int argc, char** argv) {
         }
         printf("Writing...\n");
         fflush(stdout);
-        uint64_t start = (((millis() / INTERVAL) + 2) * INTERVAL);
-        while (millis() < start) {}
+        uint64_t start = (((micros() / INTERVAL) + 2) * INTERVAL);
+        while (micros() < start) {}
         start += INTERVAL;
-        while (millis() < start) {
+        while (micros() < start) {
             spam_rdrand();
         }
         start += INTERVAL / 2;
@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
             bool bit = nth_bit(text_buf, n);
             printf("\r%d @ %d          ", bit, n);
             fflush(stdout);
-            while (millis() < (start + (INTERVAL * n))) {
+            while (micros() < (start + (INTERVAL * n))) {
                 if (bit) spam_rdrand();
             }
         }

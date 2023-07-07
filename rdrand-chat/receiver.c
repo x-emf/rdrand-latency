@@ -5,19 +5,19 @@
 #include "interval.h"
 #include "../measure.h"
 
-#define LATENCY_SAMPLES 8
+#define LATENCY_SAMPLES 3
 
 int main(int argc, char** argv) {
     struct timespec delay;
     delay.tv_sec = 0;
     delay.tv_nsec = 5 * 1000;
-    int poll = ((millis() / INTERVAL) + 2) * INTERVAL;
+    uint64_t poll = ((micros() / INTERVAL) + 2) * INTERVAL;
     bool reading = false;
     int read_index = 0;
     char read_buf[128] = {'\0'};
     char partial_buf[128] = {'\0'};
     while (1) {
-        while (millis() < poll) {}
+        while (micros() < poll) {}
         poll += INTERVAL;
         int num_high = 0;
         uint64_t latency;
