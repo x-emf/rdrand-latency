@@ -1,1 +1,1 @@
-#define INTERVAL 1250
+#define INTERVAL 1350
